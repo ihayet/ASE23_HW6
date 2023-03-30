@@ -1,0 +1,29 @@
+
+Clndrs 4 8
+
+Volume 79 455
+
+Model 70 82
+
+origin 1 1
+origin 2 2
+origin 3 3
+
+Clndrs 4 8 0.603{:best 12 :rest 24}
+origin 1 1 0.541{:best 12 :rest 32}
+Volume 79 455 0.128{:best 3 :rest 9}
+Model 70 82 0.023{:best 1 :rest 9}
+origin 2 2 0.0{:rest 9}
+origin 3 3 0.0{:rest 7}
+
+{:Clndrs [[4, 8]]}
+{:Clndrs [[4, 8]] :origin [1]}
+{:Clndrs [[4, 8]] :Volume [[79, 455]] :origin [1]}
+
+-----------
+explain={:Clndrs [[4, 8]] :origin [1]}
+all               {:Acc+ 15.5 :Lbs- 2807 :Mpg+ 20 :N 398} {:Acc+ 2.734 :Lbs- 893.75 :Mpg+ 7.812 :N 398}
+sway with 6s evals {:Acc+ 18 :Lbs- 2395 :Mpg+ 30 :N 12} {:Acc+ 2.266 :Lbs- 263.672 :Mpg+ 3.906 :N 12}
+xpln on   6s evals {:Acc+ 16.4 :Lbs- 2833 :Mpg+ 20 :N 146} {:Acc+ 1.875 :Lbs- 533.203 :Mpg+ 3.906 :N 146}
+sort with 398s evals {:Acc+ 19.2 :Lbs- 2070 :Mpg+ 40 :N 12} {:Acc+ 2.617 :Lbs- 199.219 :Mpg+ 3.906 :N 12}
+✅ pass: xpln

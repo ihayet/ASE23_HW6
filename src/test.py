@@ -1,12 +1,14 @@
 from re import S
 from SYM import SYM
 from NUM import NUM
-from strings import o, oo, show
+from strings import o, oo, show, fmt
 from lists import map
-from utils import getThe, setThe, cliffsDelta, diffs, rand, rint, rnd, setSeed, get_ofile, copy, last, has
+from utils import getThe, setThe, cliffsDelta, diffs, rand, rint, rnd, setSeed, get_ofile, copy, last, has, value
 from repgrid import repcols, reprows, repplace, repgrid
+from explain import xpln, showRule, selects
 from csv import csv
 from DATA import DATA
+from bins import bins
 
 def settings_test():
     err = 0
@@ -272,3 +274,40 @@ def dist_test():
 
     return 0
 
+def bins_test():
+    data = DATA(getThe()['file'])
+    best, rest = data.sway()
+
+    print('all\t', o({'best': len(best.rows), 'rest': len(rest.rows)}))
+    for k, t in enumerate(bins(data.cols.xcols, {'best': best.rows, 'rest': rest.rows})):
+        for single_range in t:
+            print('{}\t{}\t{}\t{}\t{}'.format(single_range['txt'], single_range['lo'], single_range['hi'], rnd(value(single_range['y'].has, len(best.rows), len(rest.rows), 'best')), single_range['y'].has))
+        print()
+
+    return 0
+
+def xpln_test():
+    data = DATA(getThe()['file'])
+    best, rest, evals = data.sway()
+    rule, most = xpln(data, best, rest)
+    if rule:
+        print("\n-----------\nexplain=", o(showRule(rule)))
+        get_ofile().write('\n-----------\nexplain=' + o(showRule(rule)) + '\n')
+        
+        print("all               ", o(data.stats()), o(data.stats(_what='div')))
+        get_ofile().write('all               ' + o(data.stats()) + ' ' + o(data.stats(_what='div')) + '\n')
+        
+        best1 = DATA(None, cols = [data.cols.names], rows = [row.get_cells() for row in best.rows])
+        print(fmt("sway with %5s evals", evals), o(best1.stats()), o(best1.stats(_what='div')))
+        get_ofile().write(fmt("sway with %5s evals", evals) + ' ' + o(best1.stats()) + ' ' + o(best1.stats(_what='div')) + '\n')
+        
+        data1 = DATA(None, cols = [data.cols.names], rows = [row.get_cells() for row in selects(rule, data.rows)])
+        print(fmt("xpln on   %5s evals", evals), o(data1.stats()), o(data1.stats(_what='div')))
+        get_ofile().write(fmt("xpln on   %5s evals", evals) + ' ' + o(data1.stats()) + ' ' + o(data1.stats(_what='div')) + '\n')
+        
+        top = data.betters(len(best.rows))
+        top = DATA(None, cols = [data.cols.names], rows = [row.get_cells() for row in top])
+        print(fmt("sort with %5s evals", len(data.rows)), o(top.stats()), o(top.stats(_what='div')))
+        get_ofile().write(fmt("sort with %5s evals", len(data.rows)) + ' ' + o(top.stats()) + ' ' + o(top.stats(_what='div')) + '\n')
+
+    return 0

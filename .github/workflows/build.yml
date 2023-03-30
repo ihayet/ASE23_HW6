@@ -1,0 +1,9 @@
+name: hw6
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: hw6-test
+        run: python src/main.py -g all

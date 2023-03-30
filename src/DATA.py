@@ -48,6 +48,18 @@ class DATA:
             s2 = s2 - math.exp(col.w * (y-x)/len(ys))
         return s1/len(ys) < s2/len(ys)
 
+    def betters(self, n):
+        rowcopy = [row for row in self.rows]
+
+        for r in range(len(rowcopy)):
+            for _r in range(len(rowcopy)):
+                if self.better(rowcopy[r], rowcopy[_r]):
+                    tmp = rowcopy[_r]
+                    rowcopy[_r] = rowcopy[r]
+                    rowcopy[r] = tmp
+        
+        return rowcopy[:n]
+
     def dist(self, row1, row2, cols=None):
         n, d = 0, 0
         for _, col in enumerate(cols or self.cols.xcols):
@@ -98,7 +110,10 @@ class DATA:
                 mid = t['row']
             else:
                 right.append(t['row'])
-        return left, right, A, B, mid, c
+
+        evals = 1 if getThe()['Reuse'] and above else 2
+
+        return left, right, A, B, mid, c, evals
 
     def cluster(self, rows=None, cols=None, above=None):
         rows = rows or self.rows
@@ -123,15 +138,15 @@ class DATA:
         return node
 
     def sway(self):
-        def worker(rows, worse, above=None):
+        def worker(rows, worse, evals0, above=None):
             if len(rows) <= len(self.rows) ** getThe()['min']:
-                return rows, many(worse, getThe()['rest'] * len(rows))
+                return rows, many(worse, getThe()['rest'] * len(rows)), evals0
             else:
-                left, right, A, B, _mid, _c = self.half(rows, None, above)
+                left, right, A, B, _mid, _c, evals = self.half(rows, None, above)
                 if self.better(B, A): 
                     left, right, A, B = right, left, B, A
                 for row in right: worse.append(row)
-                return worker(left, worse, A)
+                return worker(left, worse, evals0+evals, A)
         
-        best, rest = worker(self.rows, [])
-        return self.clone(best), self.clone(rest)
+        best, rest, evals = worker(self.rows, [], 0)
+        return self.clone(best), self.clone(rest), evals
