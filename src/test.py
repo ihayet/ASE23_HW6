@@ -35,6 +35,7 @@ def sym_test():
         sym.add(c)
     
     print(sym.mid(), rnd(sym.div()))
+    get_ofile().write(str(sym.mid()) + ' ' + str(rnd(sym.div())) + '\n')
 
     if sym.mid() != "a":
         err += 1
@@ -47,7 +48,9 @@ def num_test():
     for i in range(1, 10001): num1.add(rand())
     for i in range(1, 10001): num2.add(rand()**2)
     print(1, rnd(num1.mid()), rnd(num1.div()))
+    get_ofile().write(str(1) + ' ' + str(rnd(num1.mid())) + ' ' + str(rnd(num1.div())) + '\n')
     print(2, rnd(num2.mid()), rnd(num2.div()))
+    get_ofile().write(str(2) + ' ' + str(rnd(num2.mid())) + ' ' + str(rnd(num2.div())) + '\n')
     return 0.5 == rnd(num1.mid()) and num1.mid() > num2.mid()
 
 def csv_test():
@@ -118,12 +121,15 @@ def half_test():
     o_file = get_ofile()
 
     data = DATA(getThe()['file'], None, None)
-    left, right, A, B, mid, c = data.half(None, None, None)
+    left, right, A, B, mid, c, evals = data.half(None, None, None)
     
     print(len(left), len(right))
+    get_ofile().write(str(len(left)) + ' ' + str(len(right)) + '\n')
     l, r = data.clone(left), data.clone(right)
     print('l', o(l.stats()))
+    get_ofile().write('l ' + o(l.stats()) + '\n')
     print('r', o(r.stats()))
+    get_ofile().write('r ' + o(r.stats()) + '\n')
 
     return err
 
@@ -139,16 +145,24 @@ def optimize_test():
     err = 0
 
     data = DATA(getThe()['file'])
-    best, rest = data.sway()
+    best, rest, evals = data.sway()
 
     print('\nall\t', o(data.stats()))
+    get_ofile().write('\nall\t' + o(data.stats()) + '\n')
     print('   \t', o(data.stats(_what='div')))
+    get_ofile().write('   \t' + o(data.stats(_what='div')) + '\n')
     print('\nbest\t', o(best.stats()))
+    get_ofile().write('\nbest\t' + o(best.stats()) + '\n')
     print('    \t', o(best.stats(_what='div')))
+    get_ofile().write('    \t' + o(best.stats(_what='div')) + '\n')
     print('\nrest\t', o(rest.stats()))
+    get_ofile().write('\nrest\t' + o(rest.stats()) + '\n')
     print('    \t', o(rest.stats(_what='div')))
+    get_ofile().write('    \t' + o(rest.stats(_what='div')) + '\n')
     print('\nall ~= best?', o(diffs(best.cols.ycols, data.cols.ycols)))
+    get_ofile().write('\nall ~= best? ' + o(diffs(best.cols.ycols, data.cols.ycols)) + '\n')
     print('best ~= rest?', o(diffs(best.cols.ycols, rest.cols.ycols)))
+    get_ofile().write('best ~= rest? ' + o(diffs(best.cols.ycols, rest.cols.ycols)) + '\n')
 
     return err
 
@@ -261,6 +275,7 @@ def cliffs_test():
         t3 = map(t1, fun)
         diff = cliffsDelta(t1, t3)
         print(">", rnd(j), diff)
+        get_ofile().write("> " + str(rnd(j)) + ' ' + str(diff) + '\n')
         j = j*1.025
 
     return 0
@@ -276,12 +291,14 @@ def dist_test():
 
 def bins_test():
     data = DATA(getThe()['file'])
-    best, rest = data.sway()
+    best, rest, evals = data.sway()
 
     print('all\t', o({'best': len(best.rows), 'rest': len(rest.rows)}))
+    get_ofile().write('all\t' + o({'best': len(best.rows), 'rest': len(rest.rows)}) + '\n')
     for k, t in enumerate(bins(data.cols.xcols, {'best': best.rows, 'rest': rest.rows})):
         for single_range in t:
             print('{}\t{}\t{}\t{}\t{}'.format(single_range['txt'], single_range['lo'], single_range['hi'], rnd(value(single_range['y'].has, len(best.rows), len(rest.rows), 'best')), single_range['y'].has))
+            get_ofile().write('{}\t{}\t{}\t{}\t{}'.format(single_range['txt'], single_range['lo'], single_range['hi'], rnd(value(single_range['y'].has, len(best.rows), len(rest.rows), 'best')), single_range['y'].has) + '\n')
         print()
 
     return 0

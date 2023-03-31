@@ -130,7 +130,7 @@ class DATA:
         }       
         
         if len(rows) >= 2 * len(self.rows) ** getThe()['min']:
-            left, right, node['A'], node['B'], node['mid'], node['c'] = self.half(rows, cols, above)
+            left, right, node['A'], node['B'], node['mid'], node['c'], node['evals'] = self.half(rows, cols, above)
             
             node['left'] = self.cluster(left, cols, node['A'])
             node['right'] = self.cluster(right, cols, node['B'])
